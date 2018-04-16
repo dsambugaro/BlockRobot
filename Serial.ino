@@ -1,9 +1,8 @@
-String caractere;
-int valor = 0;
-int passo[6];
+byte passo[6];
 int interruptPin = 2;
 int buttonLast = 0;
 int buttonNow = 1;
+byte modulos = 6;
 
 void setup(){
   Serial.begin(9600);
@@ -23,7 +22,7 @@ void setup(){
 }
 
 void loop(){
-  Serial.println("Nop! ");
+  //Serial.println("Nop! ");
   buttonNow = 1;
   buttonLast = 0;
   delay(1000);
@@ -52,8 +51,8 @@ void captura(){
 /* Os case sao os valores das resistencias */
 int traduzir(int pin){
    int resistencia = analogRead(pin);
-   Serial.println("VALOR RESISTENCIA: ");
-   Serial.println(resistencia);
+   /*Serial.println("VALOR RESISTENCIA: ");
+   Serial.println(resistencia);*/
    delay(1000);
    if (resistencia > 1009 && resistencia < 1030){
      return 0;
@@ -73,14 +72,12 @@ int traduzir(int pin){
 }
 
 /* Imprimi oque tem dentro da Array */
-void imprimi(int* p){
-  Serial.println("Valores: ");
+void imprimi(byte* p){
    int i = 0;
-  for(i = 0; i < 6;i++){
-                Serial.print("Vetor[");
-                Serial.print(i);
-                Serial.print("] = ");
+  for(i = 0; i < modulos;i++){
 		Serial.print(p[i]);
-                Serial.println(" ");
+                if( i != (modulos-1))
+                  Serial.print(",");
 	 }
+Serial.println(" ");
 }
