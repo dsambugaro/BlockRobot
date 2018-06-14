@@ -16,7 +16,6 @@
 #define Brick5_HIGH 50
 #define Brick5_LOW 15
 
-char* passo[25];
 byte modulos = 12;
 
 int buttonLast = 0;
@@ -71,12 +70,11 @@ void captura(){
     digitalWrite(lin1, LOW);
     digitalWrite(lin2, HIGH);
     
-    for(int i = 14; i <= 18;i++){
+    for(int i = 14; i <= 19;i++){
         word += traduzir(i);
    		word += ",";
     }
-    
-    word += traduzir(A5);
+
     word += "]";
 
     /* Imprimi o que tem dentro da Array */
