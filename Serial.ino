@@ -2,7 +2,7 @@
 #define Brick0_LOW 1009
 
 #define Brick1_HIGH 999
-#define Brick1_LOW	960
+#define Brick1_LOW 960
 
 #define Brick2_HIGH 450
 #define Brick2_LOW 400
@@ -16,7 +16,7 @@
 #define Brick5_HIGH 50
 #define Brick5_LOW 15
 
-byte passo[12];
+char* passo[25];
 byte modulos = 12;
 
 int buttonLast = 0;
@@ -59,27 +59,31 @@ void captura(){
     digitalWrite(lin1, HIGH);
     digitalWrite(lin2, LOW);
     
-    passo[0] = traduzir(A0);
-    passo[1] = traduzir(A1);
-    passo[2] = traduzir(A2);
-    passo[3] = traduzir(A3);
-    passo[4] = traduzir(A4);
-    passo[5] = traduzir(A5);
+    String word = "";
+    
+    word += "[";
+    for(int i = 14; i <= 19;i++){
+        word += traduzir(i);
+   		word += ",";
+    }
     
     /*Muda A Linha */
     digitalWrite(lin1, LOW);
     digitalWrite(lin2, HIGH);
     
-    passo[6] = traduzir(A0);
-    passo[7] = traduzir(A1);
-    passo[8] = traduzir(A2);
-    passo[9] = traduzir(A3);
-    passo[10] = traduzir(A4);
-    passo[11] = traduzir(A5);
+    for(int i = 14; i <= 18;i++){
+        word += traduzir(i);
+   		word += ",";
+    }
     
+    word += traduzir(A5);
+    word += "]";
+
+    /* Imprimi o que tem dentro da Array */
+    Serial.println(word);
     
-    imprimi(passo);
-    delay(5000);
+
+    delay(100);
     
     buttonLast = buttonNow;  
     
@@ -91,37 +95,26 @@ void captura(){
 }
 
 /* Os case sao os valores das resistencias */
-int traduzir(int pin){
+char* traduzir(int pin){
    int resistencia = analogRead(pin);
   
-   Serial.println("VALOR RESISTENCIA: ");
-   Serial.println(resistencia);
+   //Serial.println("RES: ");
+   //Serial.println(resistencia);
    delay(100);
   
    if (resistencia > Brick0_LOW && resistencia < Brick0_HIGH){
-     return 0;
+     return "0";
    }else if(resistencia > Brick1_LOW && resistencia < Brick1_HIGH){
-     return 1;
+     return "1";
    }else if(resistencia > Brick2_LOW && resistencia < Brick2_HIGH){
-     return 2;
+     return "2";
    }else if(resistencia > Brick3_LOW && resistencia < Brick3_HIGH){
-     return 5;
+     return "5";
    }else if(resistencia > Brick4_LOW && resistencia < Brick4_HIGH){
-     return 3;
+     return "3";
    }else if(resistencia > Brick5_LOW && resistencia < Brick5_HIGH){
-     return 4;
+     return "4";
    }else{
-   		return -1;
+   		return "-1";
    }
-}
-
-/* Imprimi o que tem dentro da Array */
-void imprimi(byte* p){
-  int i = 0;
-  for(i = 0; i < modulos;i++){
-		Serial.print(p[i]);
-        	if( i != (modulos-1))
-            	Serial.print(",");
-	 }
-	Serial.println(" ");
 }
