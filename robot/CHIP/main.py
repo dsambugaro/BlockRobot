@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import communicationController
 from threading import Thread
+
+import communicationController
 
 class MainController(Thread):
     def __init__(self):
