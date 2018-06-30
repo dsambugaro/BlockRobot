@@ -2,29 +2,19 @@
 #include <Wire.h>
 
 #define SLAVE_ADDRESS 0x04
-#define NUMBER_COMMANDS 12
+#define NUMBER_COMMANDS 4
 
 bool hasData = false;
 bool running = false;
 byte interruptPin = 2;
 int commandsReceived[NUMBER_COMMANDS];
-int commandsBuffer[5][NUMBER_COMMANDS] = {
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-};
-int commandsRunning[NUMBER_COMMANDS];
+int commandsRunning[NUMBER_COMMANDS] = {0,0,0,0};
 int byteReading = 0;
 
 void stopAll() {
   for (size_t i = 0; i < NUMBER_COMMANDS; i++) {
     commandsReceived[i] = 0;
     commandsRunning[i] = 0;
-    for (size_t j = 0; j < 5; j++) {
-      commandsBuffer[j][i] = 0;
-    }
   }
 }
 
@@ -64,16 +54,29 @@ void loop() {
 
   if (hasData && !running) {
     for (int i = 0; i < NUMBER_COMMANDS; i++) {
+      commandsRunning[i] = commandsReceived[i];
       Serial.print(commandsReceived[i]);
       Serial.print(" ");
-      delay(500);
+      commandsReceived[i] = 0;
     }
+    hasData = false;
   }
 
-  if (hasData) {
-    digitalWrite(13, HIGH);
+  for (int i = 0; i < NUMBER_COMMANDS; i++) {
+    if (commandsRunning[i] == 1) {
+      // Esquerda
+    }
+    if (commandsRunning[i] == 2) {
+      // Direita
+    }
+    if (commandsRunning[i] == 3) {
+      // Frente
+    }
+    if (commandsRunning[i] == 4) {
+      // Trás
+    }
 
-    digitalWrite(13, LOW);
+    commandsRunning[i] = 0;
   }
   delay(100);
 }
