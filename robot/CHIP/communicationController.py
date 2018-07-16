@@ -3,17 +3,15 @@
 
 import time
 import serial
+import smbus2 as smbus
+import CHIP_IO.GPIO as GPIO
 from threading import Thread
 
-import smbus
-import CHIP_IO.GPIO as GPIO
-
-
 class COMController(Thread):
-    startflag = "["
-    endflag = "]"
-    splitflag = ' '
-    stopflag = '*'
+    startflag = b'['
+    endflag = b']'
+    splitflag = b','
+    stopflag = b'*'
     rfcomm = "/dev/rfcomm0"
     baudrate = 9600
     uno_address = 0x04
@@ -28,18 +26,16 @@ class COMController(Thread):
         self.bluetooth.open()
         self.bus = smbus.SMBus(2)
 
-        GPIO.setup("XIO-P0", GPIO.OUT)
-        GPIO.output("XIO-P0", GPIO.LOW)
+        GPIO.setup('XIO-P0', GPIO.OUT)
+        GPIO.output('XIO-P0', GPIO.LOW)
 
 
     def run(self):
-        while self.teste < 5:
+        while self.running:
             commands = self.read_commands()
-
             for command in commands:
                 self.bus.write_byte(self.uno_address, command)
             time.sleep(0.5)
-            self.teste += 1
 
     def read_commands(self):
         commandList = []
@@ -47,13 +43,13 @@ class COMController(Thread):
             command = self.bluetooth.read()
             if command == self.startflag:
                 command = self.bluetooth.read()
-                aux = ''
+                aux = b''
                 while command != self.endflag:
                     if command != self.splitflag:
                         aux += command
                     else:
-                        commandList.append(int(aux))
-                        aux = ''
+                        commandList.append(int(aux.decode('utf-8')))
+                        aux = b''
                     command = self.bluetooth.read()
                     time.sleep(0.5)
                 print("------------------------------------------")
